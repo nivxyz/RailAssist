@@ -11,7 +11,8 @@ import type { LangCode, NeedType } from "./types";
 // the key out (so English shows) and listed it in a TODO comment.
 // Keep {placeholders} exactly as they are.
 // TODO(native-speaker review): howToGet, callNumber, openLink, askAt, enquiryCounter,
-// notUnderstood, cantArrange, canHelpWith, notPossibleTitle, install* exist only in
+// notUnderstood, cantArrange, canHelpWith, notPossibleTitle, install*, and the chat keys
+// (welcome, suggest*, where*, ...) exist only in
 // English and Hindi so far; other languages fall back to English.
 // ---------------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ export const LANGUAGES: { code: LangCode; native: string; english: string }[] = 
 ];
 
 const en = {
-  tagline: "Station help, start to finish",
+  tagline: "Your train travel helper",
   demoData: "Demo data",
   language: "Language",
   stepOf: "Step {n} of 3",
@@ -124,6 +125,22 @@ const en = {
   installNo: "Not now",
   installStepsIos: "In Safari, tap the Share button at the bottom, then tap “Add to Home Screen”.",
   installStepsAndroid: "Tap the browser menu (⋮) at the top, then tap “Install app” or “Add to Home screen”.",
+  welcome: "Namaste! I'm RailAssist. Tell me about your train journey and the help you need, like a wheelchair, help with bags, or food on the train.",
+  privacyNote: "This chat stays on your device. Nobody else sees it.",
+  suggestWheelchair: "I need a wheelchair at the station",
+  suggestBags: "I need help with heavy bags",
+  suggestFood: "How do I order food on the train?",
+  suggestMedical: "I need medical help on the train",
+  typeMessage: "Type your message",
+  send: "Send",
+  newChat: "Start a new chat",
+  thinking: "Thinking…",
+  offlineReply: "Here is the help I found. Use the buttons below to arrange it.",
+  whereBoarding: "At the station where you get on",
+  whereArrival: "At the station where you get off",
+  whereOnboard: "On the train",
+  usefulLinks: "Useful official links",
+  alwaysAvailable: "Help any time",
 };
 
 export type TKey = keyof typeof en;
@@ -131,7 +148,7 @@ type Dict = Partial<Record<TKey, string>>;
 
 // TODO(native-speaker review): Hindi.
 const hi: Dict = {
-  tagline: "पूरी यात्रा में स्टेशन पर मदद",
+  tagline: "आपका ट्रेन यात्रा सहायक",
   demoData: "डेमो डेटा",
   language: "भाषा",
   stepOf: "चरण {n} / 3",
@@ -228,6 +245,22 @@ const hi: Dict = {
   installNo: "अभी नहीं",
   installStepsIos: "Safari में नीचे Share बटन दबाएँ, फिर “Add to Home Screen” दबाएँ।",
   installStepsAndroid: "ऊपर ब्राउज़र मेनू (⋮) दबाएँ, फिर “Install app” या “Add to Home screen” दबाएँ।",
+  welcome: "नमस्ते! मैं RailAssist हूँ। अपनी ट्रेन यात्रा और ज़रूरी मदद के बारे में बताइए, जैसे व्हीलचेयर, सामान में मदद, या ट्रेन में खाना।",
+  privacyNote: "यह बातचीत सिर्फ़ आपके फ़ोन पर रहती है। कोई और इसे नहीं देखता।",
+  suggestWheelchair: "मुझे स्टेशन पर व्हीलचेयर चाहिए",
+  suggestBags: "मुझे भारी सामान में मदद चाहिए",
+  suggestFood: "ट्रेन में खाना कैसे मँगवाऊँ?",
+  suggestMedical: "मुझे ट्रेन में डॉक्टरी मदद चाहिए",
+  typeMessage: "अपना संदेश लिखें",
+  send: "भेजें",
+  newChat: "नई बातचीत शुरू करें",
+  thinking: "सोच रहे हैं…",
+  offlineReply: "यह रही मदद। नीचे दिए बटनों से इसका इंतज़ाम करें।",
+  whereBoarding: "जिस स्टेशन से आप चढ़ेंगे",
+  whereArrival: "जिस स्टेशन पर आप उतरेंगे",
+  whereOnboard: "ट्रेन में",
+  usefulLinks: "काम के सरकारी लिंक",
+  alwaysAvailable: "कभी भी मदद",
 };
 
 // TODO(native-speaker review): Tamil. Not confident, left in English:

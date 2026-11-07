@@ -2,9 +2,14 @@
 
 Prototype for **Youth Ideathon 2026 (IRCTC track)**.
 
-RailAssist helps elderly and disabled train passengers in India (and their families) plan all the station help they need for one trip. The passenger enters a PNR, says what they need in their own language, and gets a clear checklist for each station. Station staff see the requests live, and the family gets phone-style updates.
+RailAssist is a chatbot that helps elderly and disabled Indian Railways passengers (and their families) work out what help they need for a train journey, and how to get it. You type or speak in your own language. It tells you what to ask for and when, and gives you official links, apps and phone numbers to arrange each thing yourself.
 
-> **Prototype only.** All trains, times and passengers are demo data. Nothing is booked with Indian Railways or IRCTC. The "Request sent to station" flow goes to our own demo station desk. With an IRCTC partnership, RailAssist would book these services automatically.
+- **One chat, just for you.** There is no admin, no station desk and nobody else reading it. The chat is saved only on your own device.
+- **No booking.** RailAssist cannot book anything. It points you to the official way to do it (IRCTC, eCatering, Rail Madad, RailOne and so on). With an IRCTC partnership, it could book these for you in the future.
+- **Realistic.** It only helps with real railway services: wheelchair, porter (Sahayak), battery car, lower berth quota, food on the train, medical help, and help to reach your coach. Anything else (a teacher on board, a personal nurse, a taxi) is listed as **Not available on trains or at stations**. Unrelated requests (like "a Boeing aeroplane") get **"Sorry, I didn't understand that."**
+- **7 languages:** English, Hindi, Tamil, Kannada, Telugu, Bengali, Marathi.
+
+Live: https://railassist-ideathon.vercel.app (same chatbot on phone and PC).
 
 ## Setup
 
@@ -15,13 +20,11 @@ npm install
 cp .env.example .env.local     # on Windows: copy .env.example .env.local
 ```
 
-Open `.env.local` and paste your Groq key (from https://console.groq.com/keys):
+Put your Groq key (from https://console.groq.com/keys) in `.env.local`:
 
 ```
 GROQ_API_KEY=gsk_...
 ```
-
-Then start the app:
 
 ```bash
 npm run dev
@@ -29,90 +32,50 @@ npm run dev
 
 Open http://localhost:3000.
 
-The key is only used by the server-side API routes (`/api/transcribe`, `/api/plan`). It is never sent to the browser.
+The key is only used by the server (`/api/chat`, `/api/transcribe`) and is never sent to the browser. Without a key the chat still works with a simple offline keyword helper, and voice input asks you to type instead.
 
-**No key? The demo still works.** Voice input will show a friendly error and ask the user to type, and the plan is made by a simple offline keyword planner instead of the AI.
+## Using it
 
-## Pages
+1. Pick your language at the top.
+2. Tap the orange microphone and speak, or type. You can also tap a suggestion such as "I need a wheelchair at the station".
+3. RailAssist replies with:
+   - a short answer,
+   - a card for each kind of help (where you need it: at the station you get on, where you get off, or on the train),
+   - **How to get it today** buttons: official websites, apps and numbers (tap to call or open),
+   - **Help any time:** 139 and the station enquiry counter.
+4. Ask follow-up questions. It remembers the conversation. **Start a new chat** clears it.
 
-| URL | What it is |
-| --- | --- |
-| `/` | Picks the view for your device: phones go to `/app`, PCs go to `/station` (see `src/proxy.ts`) |
-| `/download` | Live previews of the phone app and PC version, Install buttons and a QR code |
-| `/app` | Passenger app (phone-sized frame on desktop) |
-| `/station` | Station staff assistance desk |
-| `/family` | What a relative sees: train position and updates |
+### Installing it as an app
 
-All windows on the **same laptop and same browser** stay in sync through `localStorage` + `BroadcastChannel`. There is no database.
+- **Phone:** open the site. It asks "Download the RailAssist app?". Tap **Yes, download** (on iPhone it shows the Safari steps: Share, then Add to Home Screen). It gets its own icon and opens full screen.
+- **PC:** in Chrome, Edge or Brave, click the install icon in the address bar.
 
-## Live site and installing the app
+## Official links and facts
 
-Live demo: https://railassist-ideathon.vercel.app (hosted on Vercel; every push to `main` redeploys).
+All links, numbers and facts were researched from official sources on 8 Nov 2026, and each one lists its source:
 
-RailAssist is an installable web app (PWA):
-- **Phone:** open the site. It goes straight to the passenger app and asks "Download the RailAssist app?". Tap **Yes, download** (on iPhone it shows the Safari steps: Share, Add to Home Screen). It gets its own icon and opens full screen. "Not now" hides the question on that phone.
-- **PC:** opening the site goes straight to the Station Desk. Click the install icon in the address bar (Chrome, Edge or Brave) to install it as "RailAssist Station Desk". The **Phone app & download** button opens `/download`.
+- `src/lib/contacts.ts`: the buttons shown under each kind of help, the helpline, and the "Useful official links" on the welcome screen.
+- `src/lib/systemPrompt.ts`: the `FACTS` the AI is allowed to state (wheelchairs, battery cars, porters, lower berth quota, 139, eCatering, RailOne, Divyangjan ID).
 
-## What the AI will and won't plan
+Things to know (from that research):
 
-- It only plans real station and train services: wheelchair, porter (Sahayak), battery car, lower berth, meals, medical help, and an escort to the coach.
-- Anything else (for example "a Hindi teacher on board", "a personal nurse", "a taxi") is listed under **Not available on trains or at stations** instead of being planned.
-- Requests unrelated to train help (for example "a Boeing aeroplane" or random words) get **"Sorry, I didn't understand that"**, plus a list of what it can help with.
-- Groq's free plan allows about 8,000 tokens per minute (roughly 4–5 plans). If you hit the limit, the app waits a few seconds and retries before falling back to the offline planner.
+- **No national online booking for wheelchairs, porters or battery cars.** IRCTC e-Wheelchair online booking covers only 19 big stations (it needs your PNR). Free wheelchairs are available at 5,868 stations: ask at the enquiry counter or call 139.
+- **139** is the single railway helpline (182 was merged into it). Press 1 for security or medical help.
+- **Food on the train:** IRCTC eCatering, 1323, or the Food on Track app.
 
-## Running the demo (for the pitch video)
+Re-check these before the pitch. Never add a number or link from memory: use only official sources.
 
-1. Open two windows of the same browser side by side at 1920×1080:
-   - left: http://localhost:3000/app (passenger)
-   - right: http://localhost:3000/station (staff desk)
-   - optional third window or tab: http://localhost:3000/family
-2. **Passenger:** pick a language, tap the demo trip *Bengaluru → Chennai* (PNR `4521873690`), or type any 10-digit PNR.
-3. **Passenger:** tap the big microphone and speak, for example
-   *"I am 72, I cannot walk far and I have two heavy bags. I need a wheelchair."*
-   Or type the same text in the box. Tap **Make my help plan**.
-4. **Passenger:** check the help plan, then tap **Send requests to stations**.
-5. **Station:** the requests appear live. Click **Accept** on each one. The passenger app shows **Confirmed** and the family feed updates.
-6. **Station:** click **Mark boarded** on the KSR Bengaluru request (or press `N` to move the train).
-7. Press **`D`** to add a 40-minute delay. The passenger app shows an alert, the arrival help time moves from 2:30 PM to 3:10 PM, and the station request flashes with the new time.
-8. Press `N` a few times to move the train to Chennai Central, then click **Mark picked up** on the station desk.
+## Translations
 
-### Demo keyboard shortcuts (work on every page)
-
-| Key | Action |
-| --- | --- |
-| `D` | Add a 40-minute delay to the stops ahead |
-| `N` | Move the train forward (depart, then station by station) |
-| `Shift` + `R` | Restart the trip with the same PNR (good between takes) |
-
-There is also a tiny grey dot in the bottom-left corner of every page. Click it to open the same demo controls, plus **Clear everything**.
-
-Shortcuts are ignored while typing in a text box.
-
-### Demo PNRs
-
-| PNR | Trip |
-| --- | --- |
-| `4521873690` | 12608 Lalbagh Express, KSR Bengaluru → Chennai Central |
-| `2468013579` | 12123 Deccan Queen, Mumbai CSMT → Pune |
-| `8765432109` | 12301 Rajdhani Express, Howrah → New Delhi (overnight) |
-
-Any other 10-digit PNR returns one of these routes with a generic passenger.
-
-## Before the pitch: things to fill in
-
-- **Facts** in `src/lib/systemPrompt.ts`: the `FACTS` list (Yatri Mitra wheelchair booking, battery car, porter/Sahayak rates, senior citizen lower berth rules, Rail Madad / 139, RailOne app) is empty on purpose. Add researched text and the source URL for each. Until then, the AI tells passengers to "check at the station or on 139".
-- **Contacts** in `src/lib/contacts.ts`: RailAssist can't book services yet, so each help item shows how to arrange it today, with a **Call** button, an app or website link, or "Ask at…". Fill in the real numbers, links and counters for each service (wheelchair, porter, battery car, meals, and so on) with a source URL. Empty slots stay hidden. Until then, every card shows only "Call 139" and "Ask at the enquiry counter". Filled contacts are also passed to the AI so it can mention them.
-- **Translations** in `src/lib/i18n.ts`: every non-English string needs a native-speaker check. Keys we were not confident about are left out (English shows instead) and listed in a `TODO` comment above each language.
+UI text is in `src/lib/i18n.ts`. Hindi is complete. The other languages cover the main labels and fall back to English for newer text (each language has a TODO listing what is missing). All non-English text needs a native-speaker check. Contact button labels are English for now.
 
 ## How it works
 
-- `src/lib/config.ts`: model IDs (`whisper-large-v3-turbo` for speech, `openai/gpt-oss-120b` for planning). Change them here.
-- `src/app/api/transcribe/route.ts`: sends the recorded audio to Groq Whisper with the chosen language code.
-- `src/app/api/plan/route.ts`: sends the transcript and trip (looked up on the server from the PNR) to the chat model in JSON mode. The reply is validated (`src/lib/plan.ts`); if it is invalid it retries once, then falls back to the offline planner.
-- `src/lib/systemPrompt.ts`: the RailAssist system prompt and the FACTS section.
-- `src/lib/store.ts` and `src/lib/actions.ts`: shared demo state and every action (send, accept, delay, move train).
-- `src/lib/trips.ts`: demo trips.
+- `src/components/chat/ChatApp.tsx`: the chat screen (voice, suggestions, answer cards, saved on this device).
+- `src/app/api/chat/route.ts`: sends the conversation to the Groq chat model in JSON mode, checks the reply (`src/lib/chat.ts`), retries once, and falls back to the offline helper. It waits and retries once on Groq's free-tier rate limit (about 8,000 tokens per minute, roughly 4–5 answers).
+- `src/app/api/transcribe/route.ts`: speech to text with Groq Whisper, in the chosen language.
+- `src/lib/config.ts`: model IDs (`whisper-large-v3-turbo`, `openai/gpt-oss-120b`).
 
 ## Deploying to Vercel
 
-Import the project in Vercel and add `GROQ_API_KEY` under *Settings → Environment Variables*. Sync between windows only works inside one browser on one device, which is what the demo needs.
+Import the GitHub repo in Vercel and add `GROQ_API_KEY` under *Settings → Environment Variables*. Every push to `main` redeploys.

@@ -1,9 +1,9 @@
 {
-  "id": "/app",
+  "id": "/",
   "name": "RailAssist",
   "short_name": "RailAssist",
   "description": "Plan station help for elderly and disabled train passengers.",
-  "start_url": "/app",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

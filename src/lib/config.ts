@@ -8,9 +8,3 @@ export const MODELS = {
 } as const;
 
 export const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
-
-// Minutes added when the demo delay ("D" key) fires.
-export const DEMO_DELAY_MINUTES = 40;
-
-// Passengers are asked to reach the boarding station this many minutes early.
-export const BOARDING_HELP_LEAD_MINUTES = 30;

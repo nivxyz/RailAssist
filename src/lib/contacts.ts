@@ -1,16 +1,13 @@
 import type { NeedType } from "./types";
 
 // ===========================================================================
-// HOW TO GET EACH SERVICE TODAY
+// HOW TO GET EACH SERVICE
 // ---------------------------------------------------------------------------
-// RailAssist cannot book services yet, so for every need it shows the
-// passenger how to arrange it themselves: a number to call, an app or website
-// to open, or a counter to ask at.
+// RailAssist cannot book anything, so under each kind of help the chat shows
+// official links, apps and numbers the passenger can use themselves.
 //
-// Fill these in from official sources only. Leave `value` empty until it is
-// verified; empty entries are hidden. Put the page you checked in `source`.
-// DO NOT fill these from memory.
-//
+// Only official sources. Every entry has the page it was checked on in
+// `source`. Leave `value` empty if unsure: empty entries are hidden.
 // Filled entries are also given to the AI as facts, so it may mention them.
 // ===========================================================================
 
@@ -18,93 +15,91 @@ export type ContactKind = "phone" | "app" | "website" | "counter";
 
 export interface ContactOption {
   kind: ContactKind;
-  /** Short name shown to the passenger, e.g. "Wheelchair booking line". */
+  /** Short name shown to the passenger. */
   label: string;
-  /** phone: digits; app/website: https URL; counter: where to go, e.g. "Enquiry counter, platform 1". */
+  /** phone: digits; app/website: https URL; counter: where to go. */
   value: string;
   source: string;
-  /** Optional translation key (from i18n.ts) used instead of `value` on screen. */
+  /** Optional translation key (from i18n.ts) shown instead of `value`. */
   i18nKey?: "enquiryCounter";
 }
 
-/** Shown for every need when nothing more specific is filled in. */
-export const FALLBACK_CONTACTS: ContactOption[] = [
-  {
-    kind: "phone",
-    label: "Rail Madad helpline",
-    value: "139", // From the project brief. TODO: confirm and add source URL.
-    source: "",
-  },
+// Researched and opened on 2026-11-08. PIB = Press Information Bureau (Govt of India).
+const PIB_FACILITIES = "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2201576&reg=3&lang=1";
+
+/** Shown once under every answer that lists help. */
+export const HELPLINE: ContactOption[] = [
+  { kind: "phone", label: "Rail Madad helpline (12 languages, any phone)", value: "139", source: "https://railmadad.indianrailways.gov.in" },
   {
     kind: "counter",
     label: "Station help",
     value: "Enquiry counter at the station",
-    source: "", // Generic advice, not a specific service.
+    source: PIB_FACILITIES,
     i18nKey: "enquiryCounter",
   },
 ];
 
-/** Per service. Add as many options as you find (e.g. a phone line AND an app). */
+/**
+ * Per kind of help. Labels are English for now.
+ * TODO(native-speaker review): translate labels if needed.
+ */
 export const SERVICE_CONTACTS: Record<NeedType, ContactOption[]> = {
   wheelchair: [
-    { kind: "phone", label: "Wheelchair booking", value: "", source: "" }, // TODO: Yatri Mitra / wheelchair booking number
-    { kind: "website", label: "Wheelchair booking online", value: "", source: "" }, // TODO: official booking page, if any
-    { kind: "counter", label: "Where to ask", value: "", source: "" }, // TODO: e.g. which desk at the station
+    // Online booking only at 19 big stations and needs the PNR. Free; refundable Rs 500 deposit + photo ID at pickup.
+    { kind: "website", label: "Book a wheelchair online (IRCTC, 19 big stations)", value: "https://www.irctctourism.com/wheelchair", source: "https://www.irctctourism.com/wheelchair" },
+    { kind: "counter", label: "Free wheelchairs at 5,868 stations", value: "the station enquiry counter or station manager (free wheelchair)", source: PIB_FACILITIES },
   ],
   porter: [
-    { kind: "counter", label: "Licensed porters (Sahayak)", value: "", source: "" }, // TODO: where to find them / how to identify
-    { kind: "app", label: "Porter booking app", value: "", source: "" }, // TODO: official app link, if any
+    // No national porter booking app. Licensed Sahayaks work at fixed rates shown at the station.
+    { kind: "counter", label: "Licensed porter (Sahayak)", value: "a licensed Sahayak at the station, at the fixed rate shown there", source: PIB_FACILITIES },
   ],
   battery_car: [
-    { kind: "phone", label: "Battery car booking", value: "", source: "" }, // TODO
-    { kind: "counter", label: "Where to ask", value: "", source: "" }, // TODO
+    // 196 battery cars at 79 stations, first come first served; no central booking.
+    { kind: "counter", label: "Battery car (79 stations)", value: "the station enquiry counter or station manager", source: PIB_FACILITIES },
   ],
   lower_berth: [
-    { kind: "counter", label: "Ask the TTE on the train", value: "", source: "" }, // TODO: confirm the correct process
-    { kind: "website", label: "Change berth online", value: "", source: "" }, // TODO
+    { kind: "website", label: "Book with the senior citizen / lower berth quota (IRCTC)", value: "https://www.irctc.co.in/nget/train-search", source: "https://www.irctc.co.in/nget/train-search" },
+    { kind: "website", label: "Divyangjan railway ID card (disability quota)", value: "https://divyangjanid.indianrail.gov.in/", source: "https://divyangjanid.indianrail.gov.in/" },
   ],
   meal: [
-    { kind: "phone", label: "Order a meal", value: "", source: "" }, // TODO: official e-catering number
-    { kind: "website", label: "Order a meal online", value: "", source: "" }, // TODO: official e-catering site
+    { kind: "phone", label: "Order food to your seat (IRCTC eCatering)", value: "1323", source: "https://www.ecatering.irctc.co.in/" },
+    { kind: "website", label: "Order food online (IRCTC eCatering)", value: "https://www.ecatering.irctc.co.in/", source: "https://www.ecatering.irctc.co.in/" },
+    { kind: "app", label: "Food on Track app (Android)", value: "https://play.google.com/store/apps/details?id=com.irctc.fot", source: "https://play.google.com/store/apps/details?id=com.irctc.fot" },
+    { kind: "app", label: "Food on Track app (iPhone)", value: "https://apps.apple.com/in/app/irctc-catering-food-on-track/id1077183717", source: "https://apps.apple.com/in/app/irctc-catering-food-on-track/id1077183717" },
   ],
   medical: [
-    { kind: "phone", label: "Medical help on the train", value: "", source: "" }, // TODO: confirm (possibly 139)
+    // 139: press 1 for medical/security help (PIB 8 Mar 2021, Rail Madad site).
+    { kind: "website", label: "Rail Madad (help and complaints on the train)", value: "https://railmadad.indianrailways.gov.in", source: "https://railmadad.indianrailways.gov.in" },
   ],
   escort: [
-    { kind: "counter", label: "Where to ask", value: "", source: "" }, // TODO
+    { kind: "counter", label: "Help to reach your coach", value: "the station enquiry counter or station manager", source: PIB_FACILITIES },
   ],
   other: [],
 };
 
-/** Optional: contacts for one station, keyed by station code (e.g. "MAS"). */
-export const STATION_CONTACTS: Record<string, ContactOption[]> = {
-  // MAS: [{ kind: "phone", label: "Chennai Central help desk", value: "", source: "" }], // TODO
-};
+/** Shown on the welcome screen. */
+export const GENERAL_LINKS: ContactOption[] = [
+  { kind: "app", label: "RailOne app (Android)", value: "https://play.google.com/store/apps/details?id=org.cris.aikyam", source: "https://play.google.com/store/apps/details?id=org.cris.aikyam" },
+  { kind: "app", label: "RailOne app (iPhone)", value: "https://apps.apple.com/in/app/railone/id6473384334", source: "https://apps.apple.com/in/app/railone/id6473384334" },
+  { kind: "website", label: "Live train status (NTES)", value: "https://enquiry.indianrail.gov.in/mntes/", source: "https://enquiry.indianrail.gov.in/mntes/" },
+  { kind: "website", label: "Rail Madad: help and complaints", value: "https://railmadad.indianrailways.gov.in", source: "https://railmadad.indianrailways.gov.in" },
+  { kind: "website", label: "Facilities for seniors and Divyangjan (Govt of India)", value: PIB_FACILITIES, source: PIB_FACILITIES },
+];
 
 const filled = (list: ContactOption[] = []) => list.filter((c) => c.value.trim());
 
-/** What the passenger can do today to get this need at this station. */
-export function contactsFor(type: NeedType, stationCode: string): ContactOption[] {
-  const specific = [...filled(STATION_CONTACTS[stationCode]), ...filled(SERVICE_CONTACTS[type])];
-  const out = specific.length ? [...specific] : [];
-  // Always offer the helpline as a safety net (once).
-  for (const f of filled(FALLBACK_CONTACTS)) {
-    if (f.kind === "counter" && out.some((c) => c.kind === "counter")) continue;
-    if (!out.some((c) => c.kind === f.kind && c.value === f.value)) out.push(f);
-  }
-  return out;
-}
+export const serviceContacts = (type: NeedType) => filled(SERVICE_CONTACTS[type]);
+export const helplineContacts = () => filled(HELPLINE);
+export const generalLinks = () => filled(GENERAL_LINKS);
 
 /** Filled contacts as plain lines for the AI prompt. */
 export function contactFactLines(): string[] {
   const lines: string[] = [];
-  for (const f of filled(FALLBACK_CONTACTS)) lines.push(`${f.label}: ${f.value}`);
+  for (const c of filled(HELPLINE)) lines.push(`${c.label}: ${c.value}`);
   for (const [type, list] of Object.entries(SERVICE_CONTACTS)) {
     for (const c of filled(list)) lines.push(`${type} — ${c.label} (${c.kind}): ${c.value}`);
   }
-  for (const [code, list] of Object.entries(STATION_CONTACTS)) {
-    for (const c of filled(list)) lines.push(`Station ${code} — ${c.label} (${c.kind}): ${c.value}`);
-  }
+  for (const c of filled(GENERAL_LINKS)) lines.push(`General — ${c.label} (${c.kind}): ${c.value}`);
   return lines;
 }
 
