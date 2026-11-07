@@ -1,20 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
-
-type Platform = "ios" | "android" | "desktop";
-
-function detectPlatform(): Platform {
-  const ua = navigator.userAgent;
-  if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
-  if (/Android/i.test(ua)) return "android";
-  return "desktop";
-}
+import { useState } from "react";
+import { useInstall } from "../useInstall";
 
 /**
  * "Install app" button. Uses the browser's install prompt where it exists
@@ -22,27 +9,8 @@ function detectPlatform(): Platform {
  * (Safari on iPhone has no prompt: Share → Add to Home Screen).
  */
 export function InstallButton({ label = "Install app", className = "" }: { label?: string; className?: string }) {
-  const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [installed, setInstalled] = useState(false);
+  const { installed, platform, install } = useInstall();
   const [help, setHelp] = useState(false);
-  const [platform, setPlatform] = useState<Platform>("desktop");
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- read browser info after mount
-    setPlatform(detectPlatform());
-    if (window.matchMedia("(display-mode: standalone)").matches) setInstalled(true);
-    const onPrompt = (e: Event) => {
-      e.preventDefault();
-      setPrompt(e as BeforeInstallPromptEvent);
-    };
-    const onInstalled = () => setInstalled(true);
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
-  }, []);
 
   if (installed)
     return (
@@ -52,18 +20,8 @@ export function InstallButton({ label = "Install app", className = "" }: { label
     );
 
   const click = async () => {
-    if (prompt) {
-      try {
-        await prompt.prompt();
-        const choice = await prompt.userChoice;
-        if (choice.outcome === "accepted") setInstalled(true);
-        setPrompt(null);
-      } catch {
-        setHelp(true); // browser refused the prompt: show the manual steps
-      }
-    } else {
-      setHelp((h) => !h);
-    }
+    const shown = await install();
+    if (!shown) setHelp((h) => !h);
   };
 
   return (

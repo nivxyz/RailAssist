@@ -8,6 +8,7 @@ import { Logo } from "../Logo";
 import { PhoneFrame } from "../PhoneFrame";
 import { useLang } from "../useLang";
 import { DelayAlert } from "./DelayAlert";
+import { InstallPrompt } from "./InstallPrompt";
 import { NeedsStep } from "./NeedsStep";
 import { PlanView } from "./PlanView";
 import { PnrStep } from "./PnrStep";
@@ -34,6 +35,7 @@ export function PassengerApp() {
           <PlanView s={s} lang={lang} />
         )}
       </main>
+      <InstallPrompt lang={lang} />
       <DemoControls />
     </PhoneFrame>
   );

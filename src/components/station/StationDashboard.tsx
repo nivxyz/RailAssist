@@ -49,6 +49,12 @@ export function StationDashboard() {
               </option>
             ))}
           </select>
+          <a
+            href="/download"
+            className="rounded-xl border border-line px-3 py-2 text-sm font-semibold text-brand-800 transition hover:bg-brand-50"
+          >
+            Phone app &amp; download
+          </a>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-ok-700">
             <span className="anim-blink h-2 w-2 rounded-full bg-ok-600" />
             Live

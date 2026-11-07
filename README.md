@@ -37,7 +37,8 @@ The key is only used by the server-side API routes (`/api/transcribe`, `/api/pla
 
 | URL | What it is |
 | --- | --- |
-| `/` | Home page: live previews of the phone app and PC version, Install buttons and a QR code |
+| `/` | Picks the view for your device: phones go to `/app`, PCs go to `/station` (see `src/proxy.ts`) |
+| `/download` | Live previews of the phone app and PC version, Install buttons and a QR code |
 | `/app` | Passenger app (phone-sized frame on desktop) |
 | `/station` | Station staff assistance desk |
 | `/family` | What a relative sees: train position and updates |
@@ -49,8 +50,8 @@ All windows on the **same laptop and same browser** stay in sync through `localS
 Live demo: https://railassist-ideathon.vercel.app (hosted on Vercel; every push to `main` redeploys).
 
 RailAssist is an installable web app (PWA):
-- **Phone:** open the site, tap **Install the phone app** on the home page (on iPhone: Safari, Share, Add to Home Screen). It gets its own icon and opens full screen.
-- **PC:** open `/station` in Chrome, Edge or Brave and click the install icon in the address bar. It installs as "RailAssist Station Desk".
+- **Phone:** open the site. It goes straight to the passenger app and asks "Download the RailAssist app?". Tap **Yes, download** (on iPhone it shows the Safari steps: Share, Add to Home Screen). It gets its own icon and opens full screen. "Not now" hides the question on that phone.
+- **PC:** opening the site goes straight to the Station Desk. Click the install icon in the address bar (Chrome, Edge or Brave) to install it as "RailAssist Station Desk". The **Phone app & download** button opens `/download`.
 
 ## What the AI will and won't plan
 

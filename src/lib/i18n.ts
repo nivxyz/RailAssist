@@ -11,7 +11,7 @@ import type { LangCode, NeedType } from "./types";
 // the key out (so English shows) and listed it in a TODO comment.
 // Keep {placeholders} exactly as they are.
 // TODO(native-speaker review): howToGet, callNumber, openLink, askAt, enquiryCounter,
-// notUnderstood, cantArrange, canHelpWith, notPossibleTitle exist only in
+// notUnderstood, cantArrange, canHelpWith, notPossibleTitle, install* exist only in
 // English and Hindi so far; other languages fall back to English.
 // ---------------------------------------------------------------------------
 
@@ -118,6 +118,12 @@ const en = {
   cantArrange: "RailAssist can't arrange this: {items}.",
   canHelpWith: "I can help with a wheelchair, a porter for bags, a battery car, a lower berth, meals, medical help, or someone to walk you to your coach.",
   notPossibleTitle: "Not available on trains or at stations",
+  installTitle: "Download the RailAssist app?",
+  installBody: "Put it on your home screen. It opens like a normal app.",
+  installYes: "Yes, download",
+  installNo: "Not now",
+  installStepsIos: "In Safari, tap the Share button at the bottom, then tap “Add to Home Screen”.",
+  installStepsAndroid: "Tap the browser menu (⋮) at the top, then tap “Install app” or “Add to Home screen”.",
 };
 
 export type TKey = keyof typeof en;
@@ -216,6 +222,12 @@ const hi: Dict = {
   cantArrange: "RailAssist यह इंतज़ाम नहीं कर सकता: {items}।",
   canHelpWith: "मैं व्हीलचेयर, सामान के लिए कुली, बैटरी कार, नीचे की बर्थ, भोजन, डॉक्टरी मदद, या कोच तक साथ चलने वाले की मदद कर सकता हूँ।",
   notPossibleTitle: "ट्रेन या स्टेशन पर उपलब्ध नहीं",
+  installTitle: "RailAssist ऐप डाउनलोड करें?",
+  installBody: "इसे अपनी होम स्क्रीन पर रखें। यह आम ऐप की तरह खुलेगा।",
+  installYes: "हाँ, डाउनलोड करें",
+  installNo: "अभी नहीं",
+  installStepsIos: "Safari में नीचे Share बटन दबाएँ, फिर “Add to Home Screen” दबाएँ।",
+  installStepsAndroid: "ऊपर ब्राउज़र मेनू (⋮) दबाएँ, फिर “Install app” या “Add to Home screen” दबाएँ।",
 };
 
 // TODO(native-speaker review): Tamil. Not confident, left in English:
