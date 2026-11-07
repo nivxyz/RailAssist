@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree, Geist_Mono } from "next/font/google";
+import { RegisterSW } from "@/components/RegisterSW";
 import "./globals.css";
 
 // Figtree: friendly, very legible at large sizes (good for older readers).
@@ -17,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "RailAssist",
   description: "Plan station help for elderly and disabled train passengers.",
+  // Installable app: the station page swaps in its own manifest.
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "RailAssist", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
@@ -26,7 +30,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${figtree.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+        <RegisterSW />
+      </body>
     </html>
   );
 }

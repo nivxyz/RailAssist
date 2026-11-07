@@ -10,7 +10,8 @@ import type { LangCode, NeedType } from "./types";
 // by a native speaker before the pitch. Where we were not confident we left
 // the key out (so English shows) and listed it in a TODO comment.
 // Keep {placeholders} exactly as they are.
-// TODO(native-speaker review): howToGet, callNumber, openLink, askAt exist only in
+// TODO(native-speaker review): howToGet, callNumber, openLink, askAt, enquiryCounter,
+// notUnderstood, cantArrange, canHelpWith, notPossibleTitle exist only in
 // English and Hindi so far; other languages fall back to English.
 // ---------------------------------------------------------------------------
 
@@ -113,6 +114,10 @@ const en = {
   openLink: "Open",
   askAt: "Ask at:",
   enquiryCounter: "the enquiry counter at the station",
+  notUnderstood: "Sorry, I didn't understand that.",
+  cantArrange: "RailAssist can't arrange this: {items}.",
+  canHelpWith: "I can help with a wheelchair, a porter for bags, a battery car, a lower berth, meals, medical help, or someone to walk you to your coach.",
+  notPossibleTitle: "Not available on trains or at stations",
 };
 
 export type TKey = keyof typeof en;
@@ -207,6 +212,10 @@ const hi: Dict = {
   openLink: "खोलें",
   askAt: "यहाँ पूछें:",
   enquiryCounter: "स्टेशन का पूछताछ काउंटर",
+  notUnderstood: "माफ़ कीजिए, मैं यह समझ नहीं पाया।",
+  cantArrange: "RailAssist यह इंतज़ाम नहीं कर सकता: {items}।",
+  canHelpWith: "मैं व्हीलचेयर, सामान के लिए कुली, बैटरी कार, नीचे की बर्थ, भोजन, डॉक्टरी मदद, या कोच तक साथ चलने वाले की मदद कर सकता हूँ।",
+  notPossibleTitle: "ट्रेन या स्टेशन पर उपलब्ध नहीं",
 };
 
 // TODO(native-speaker review): Tamil. Not confident, left in English:

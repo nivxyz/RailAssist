@@ -85,20 +85,41 @@ STRICT RULES ABOUT FACTS
 FACTS
 ${factsBlock()}
 
+BE REALISTIC
+- Only plan help that Indian Railways stations and trains really give passengers:
+  wheelchair, porter (Sahayak) for luggage, battery car on the platform, lower berth request,
+  a meal, medical help, and someone to walk them to their coach (escort).
+- Never plan or promise anything else. For example: a teacher, tutor or translator on board,
+  a personal nurse or attendant travelling with them, a private car or taxi, an aeroplane, a hotel,
+  shopping, entertainment, a pet sitter, upgrades, or anything the railway does not provide.
+  Put each such request in "notPossible" as a short phrase in ${languageName}, and leave it out of the plan.
+- If the passenger asks for something real AND something impossible, plan the real part and list the rest in "notPossible".
+
+NOT UNDERSTOOD
+- If what the passenger said has nothing to do with help for this train journey
+  (for example aeroplanes, random words, jokes, a story, a song, maths, or nonsense),
+  reply with exactly: {"understood": false}
+- Do not try to turn an unrelated request into a plan.
+- But if they ask for something for their train journey that the railway simply does not offer
+  (like a teacher on board or a personal nurse), that is NOT "not understood": reply with
+  "understood": true, an empty "stations" list, and those things in "notPossible".
+
 WHAT TO PLAN
 - Only include needs the passenger asked for, or that clearly follow from what they said.
   Example: "I cannot walk far" means a wheelchair or battery car. "Heavy bags" means a porter (Sahayak).
-- Allowed need types: wheelchair, porter, battery_car, lower_berth, meal, medical, escort, other.
+- Allowed need types: wheelchair, porter, battery_car, lower_berth, meal, medical, escort. There is no "other" type.
 - Mobility help (wheelchair, porter, battery_car, escort) goes ONLY at the boarding station and the arrival station. The passenger stays on the train at stops on the way, so never put mobility help there.
 - lower_berth goes at the boarding station.
 - meal can go at the boarding station or one stop on the way.
 - medical goes where the passenger needs it. If it sounds urgent, say to call 139 straight away.
-- Only list a station if the passenger needs something there. Most trips only need the boarding and arrival stations. Never add filler or "other" help.
+- Only list a station if the passenger needs something there. Most trips only need the boarding and arrival stations. Never add filler help.
 - Use only station codes from the trip below.
 
 OUTPUT
-Reply with ONLY one JSON object, no other text, in exactly this shape:
+Reply with ONLY one JSON object, no other text.
+If the request is about train help, use exactly this shape:
 {
+  "understood": true,
   "summary": "one or two short sentences in ${languageName}",
   "stations": [
     {
@@ -108,9 +129,12 @@ Reply with ONLY one JSON object, no other text, in exactly this shape:
         { "type": "wheelchair", "title": "short title in ${languageName}", "instruction": "one or two short sentences in ${languageName} on what to do or book" }
       ]
     }
-  ]
+  ],
+  "notPossible": ["short phrase in ${languageName}"]
 }
-Every station must have at least one need. Do not add any other keys.`;
+"notPossible" is an empty list when everything asked for is possible.
+If only impossible things were asked for, "stations" is an empty list.
+Every station you list must have at least one need. Do not add any other keys.`;
 }
 
 export function buildUserMessage(transcript: string, trip: Trip): string {

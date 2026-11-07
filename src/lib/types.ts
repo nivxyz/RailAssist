@@ -52,6 +52,8 @@ export interface Plan {
   stations: StationPlan[];
   lang: LangCode;
   source: "ai" | "offline";
+  /** Things the passenger asked for that stations and trains don't provide. */
+  notPossible?: string[];
 }
 
 export type RequestStatus = "planned" | "sent" | "confirmed" | "done";

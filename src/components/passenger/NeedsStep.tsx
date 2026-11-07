@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { applyPlan, resetDemo, setTranscript } from "@/lib/actions";
 import { t } from "@/lib/i18n";
-import { offlinePlan } from "@/lib/plan";
+import { type NoPlan, isNoPlan, offlinePlan } from "@/lib/plan";
 import type { LangCode, Plan, Trip } from "@/lib/types";
 import { MicIcon, StopIcon } from "../Icons";
 import { StepHeader } from "./StepHeader";
@@ -26,6 +26,7 @@ export function NeedsStep({ trip, lang, initial }: { trip: Trip; lang: LangCode;
   const [fromVoice, setFromVoice] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [planning, setPlanning] = useState(false);
+  const [noPlan, setNoPlan] = useState<NoPlan | null>(null);
   const recRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -96,23 +97,31 @@ export function NeedsStep({ trip, lang, initial }: { trip: Trip; lang: LangCode;
       return;
     }
     setError(null);
+    setNoPlan(null);
     setPlanning(true);
     setTranscript(transcript);
-    let plan: Plan;
+    let result: Plan | NoPlan;
     try {
       const res = await fetch("/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript, pnr: trip.pnr, lang }),
       });
-      const data = (await res.json()) as { plan?: Plan };
-      plan = res.ok && data.plan ? data.plan : offlinePlan(transcript, trip, lang);
+      const data = (await res.json()) as { plan?: Plan; notUnderstood?: boolean; notPossible?: string[] };
+      if (res.ok && data.notUnderstood) result = { none: true, notPossible: data.notPossible ?? [] };
+      else result = res.ok && data.plan ? data.plan : offlinePlan(transcript, trip, lang);
     } catch {
       // Server unreachable: plan on this device so the demo keeps going.
-      plan = offlinePlan(transcript, trip, lang);
+      result = offlinePlan(transcript, trip, lang);
     }
-    applyPlan(plan);
     setPlanning(false);
+    if (isNoPlan(result)) {
+      // Nothing we can plan: explain kindly and let them try again.
+      setNoPlan(result);
+      textRef.current?.focus();
+      return;
+    }
+    applyPlan(result);
   };
 
   return (
@@ -140,6 +149,15 @@ export function NeedsStep({ trip, lang, initial }: { trip: Trip; lang: LangCode;
           {mic === "recording" ? t(lang, "listening") : mic === "transcribing" ? <span className="anim-blink">{t(lang, "transcribing")}</span> : t(lang, "tapToSpeak")}
         </div>
       </div>
+
+      {noPlan && (
+        <div role="alert" className="anim-fade-up mb-3 rounded-2xl border border-line bg-white px-4 py-3">
+          <div className="text-lg font-bold text-brand-900">
+            {noPlan.notPossible.length ? t(lang, "cantArrange", { items: noPlan.notPossible.join(", ") }) : t(lang, "notUnderstood")}
+          </div>
+          <p className="mt-1 text-base leading-snug text-muted">{t(lang, "canHelpWith")}</p>
+        </div>
+      )}
 
       {error && (
         <div role="alert" className="anim-fade-up mb-3 rounded-2xl border border-accent-500/40 bg-accent-50 px-4 py-3 text-base font-semibold text-accent-600">

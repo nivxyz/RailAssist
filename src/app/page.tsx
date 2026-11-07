@@ -1,5 +1,5 @@
-import { PassengerApp } from "@/components/passenger/PassengerApp";
+import { Landing } from "@/components/landing/Landing";
 
 export default function Home() {
-  return <PassengerApp />;
+  return <Landing />;
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { relocalizePlan, restartTrip, resetDemo, sendRequests } from "@/lib/actions";
 import { type ContactOption, contactHref, contactsFor } from "@/lib/contacts";
 import { needLabel, t } from "@/lib/i18n";
-import { offlinePlan } from "@/lib/plan";
+import { type NoPlan, isNoPlan, offlinePlan } from "@/lib/plan";
 import { fmtTime } from "@/lib/time";
 import type { LangCode, Plan, SharedState, StationRequest } from "@/lib/types";
 import { Feed } from "../Feed";
@@ -36,7 +36,9 @@ export function PlanView({ s, lang }: { s: SharedState; lang: LangCode }) {
     if (inFlight.current === lang) return;
     inFlight.current = lang;
     const transcript = s.transcript;
-    const done = (p: Plan) => {
+    const done = (r: Plan | NoPlan) => {
+      // If the new language can't produce a plan, keep the same needs with built-in labels.
+      const p: Plan = isNoPlan(r) ? { summary: "", stations: [], lang, source: plan.source } : r;
       if (inFlight.current !== lang) return; // language changed again meanwhile
       relocalizePlan(p);
       inFlight.current = null;
@@ -50,7 +52,7 @@ export function PlanView({ s, lang }: { s: SharedState; lang: LangCode }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ transcript, pnr: trip.pnr, lang }),
     })
-      .then((res) => res.json() as Promise<{ plan?: Plan }>)
+      .then((res) => res.json() as Promise<{ plan?: Plan; notUnderstood?: boolean }>)
       .then((data) => done(data.plan ?? offlinePlan(transcript, trip, lang)))
       .catch(() => done(offlinePlan(transcript, trip, lang)));
   }, [lang, plan.lang, plan.source, s.transcript, trip]);
@@ -70,6 +72,17 @@ export function PlanView({ s, lang }: { s: SharedState; lang: LangCode }) {
                   <p className="mt-1 text-sm text-muted">{t(lang, "offlinePlan")}</p>
                 )}
               </>
+            )}
+
+            {!stale && !!plan.notPossible?.length && (
+              <div className="mt-3 rounded-xl border border-line bg-white px-4 py-3">
+                <div className="text-[15px] font-bold text-brand-900">{t(lang, "notPossibleTitle")}</div>
+                <ul className="mt-1 list-disc pl-5 text-base text-muted">
+                  {plan.notPossible.map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
+              </div>
             )}
 
             <div className="mt-4 space-y-3">

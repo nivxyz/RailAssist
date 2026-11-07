@@ -93,7 +93,7 @@ export function relocalizePlan(next: Plan) {
         }),
       };
     });
-    return { ...s, plan: { ...s.plan, summary: next.summary, lang: next.lang }, requests };
+    return { ...s, plan: { ...s.plan, summary: next.summary, lang: next.lang, notPossible: next.notPossible ?? [] }, requests };
   });
 }
 

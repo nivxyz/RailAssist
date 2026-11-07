@@ -37,16 +37,32 @@ The key is only used by the server-side API routes (`/api/transcribe`, `/api/pla
 
 | URL | What it is |
 | --- | --- |
-| `/` | Passenger app (phone-sized frame on desktop) |
+| `/` | Home page: live previews of the phone app and PC version, Install buttons and a QR code |
+| `/app` | Passenger app (phone-sized frame on desktop) |
 | `/station` | Station staff assistance desk |
 | `/family` | What a relative sees: train position and updates |
 
 All windows on the **same laptop and same browser** stay in sync through `localStorage` + `BroadcastChannel`. There is no database.
 
+## Live site and installing the app
+
+Live demo: https://railassist-ideathon.vercel.app (hosted on Vercel; every push to `main` redeploys).
+
+RailAssist is an installable web app (PWA):
+- **Phone:** open the site, tap **Install the phone app** on the home page (on iPhone: Safari, Share, Add to Home Screen). It gets its own icon and opens full screen.
+- **PC:** open `/station` in Chrome, Edge or Brave and click the install icon in the address bar. It installs as "RailAssist Station Desk".
+
+## What the AI will and won't plan
+
+- It only plans real station and train services: wheelchair, porter (Sahayak), battery car, lower berth, meals, medical help, and an escort to the coach.
+- Anything else (for example "a Hindi teacher on board", "a personal nurse", "a taxi") is listed under **Not available on trains or at stations** instead of being planned.
+- Requests unrelated to train help (for example "a Boeing aeroplane" or random words) get **"Sorry, I didn't understand that"**, plus a list of what it can help with.
+- Groq's free plan allows about 8,000 tokens per minute (roughly 4–5 plans). If you hit the limit, the app waits a few seconds and retries before falling back to the offline planner.
+
 ## Running the demo (for the pitch video)
 
 1. Open two windows of the same browser side by side at 1920×1080:
-   - left: http://localhost:3000 (passenger)
+   - left: http://localhost:3000/app (passenger)
    - right: http://localhost:3000/station (staff desk)
    - optional third window or tab: http://localhost:3000/family
 2. **Passenger:** pick a language, tap the demo trip *Bengaluru → Chennai* (PNR `4521873690`), or type any 10-digit PNR.

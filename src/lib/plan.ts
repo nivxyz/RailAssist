@@ -7,11 +7,34 @@ function str(x: unknown, max = 400): string | null {
   return s ? s.slice(0, max) : null;
 }
 
-/** Validate and clean the model's JSON. Returns null if it is unusable. */
-export function validatePlan(raw: unknown, trip: Trip, lang: LangCode): Plan | null {
+/** Services RailAssist will plan. Anything else is reported as "not possible". */
+const PLANNABLE: readonly NeedType[] = ["wheelchair", "porter", "battery_car", "lower_berth", "meal", "medical", "escort"];
+
+/**
+ * Nothing to plan: either the request had nothing to do with train help
+ * (notPossible is empty), or it only asked for things stations don't offer.
+ */
+export interface NoPlan {
+  none: true;
+  notPossible: string[];
+}
+
+export function isNoPlan(x: unknown): x is NoPlan {
+  return !!x && typeof x === "object" && (x as NoPlan).none === true;
+}
+
+function strList(x: unknown): string[] {
+  if (!Array.isArray(x)) return [];
+  return x.map((v) => str(v, 60)).filter((v): v is string => !!v).slice(0, 5);
+}
+
+/** Validate and clean the model's JSON. Returns null if it is unusable (caller retries). */
+export function validatePlan(raw: unknown, trip: Trip, lang: LangCode): Plan | NoPlan | null {
   if (!raw || typeof raw !== "object") return null;
   const obj = raw as Record<string, unknown>;
-  if (!Array.isArray(obj.stations)) return null;
+  const notPossible = strList(obj.notPossible);
+  if (obj.understood === false) return { none: true, notPossible };
+  if (!Array.isArray(obj.stations)) return notPossible.length ? { none: true, notPossible } : null;
   const codes = trip.stops.map((s) => s.code);
   const lastIdx = codes.length - 1;
 
@@ -29,10 +52,13 @@ export function validatePlan(raw: unknown, trip: Trip, lang: LangCode): Plan | n
     for (const n of s.needs) {
       if (!n || typeof n !== "object") continue;
       const r = n as Record<string, unknown>;
-      const type = (NEED_TYPES as readonly string[]).includes(String(r.type)) ? (r.type as NeedType) : "other";
+      // Only real station/train services. Unknown or "other" types are dropped, never invented.
+      if (!(NEED_TYPES as readonly string[]).includes(String(r.type))) continue;
+      const type = r.type as NeedType;
+      if (!PLANNABLE.includes(type)) continue;
       const title = str(r.title, 80) ?? needLabel(lang, type);
       const instruction = str(r.instruction) ?? t(lang, "genericInstruction");
-      if (!needs.some((x) => x.type === type && type !== "other")) needs.push({ type, title, instruction });
+      if (!needs.some((x) => x.type === type)) needs.push({ type, title, instruction });
     }
     // The passenger stays seated at stops on the way: only meal or medical help belongs there.
     if (role === "enroute") {
@@ -46,8 +72,8 @@ export function validatePlan(raw: unknown, trip: Trip, lang: LangCode): Plan | n
     else byCode.set(code, { stationCode: code, role, needs });
   }
   const stations = [...byCode.values()].sort((a, b) => codes.indexOf(a.stationCode) - codes.indexOf(b.stationCode));
-  if (!stations.length) return null;
-  return { summary: str(obj.summary, 400) ?? "", stations, lang, source: "ai" };
+  if (!stations.length) return notPossible.length ? { none: true, notPossible } : null;
+  return { summary: str(obj.summary, 400) ?? "", stations, lang, source: "ai", notPossible };
 }
 
 // ---------------------------------------------------------------------------
@@ -79,12 +105,20 @@ const KEYWORDS: Record<Exclude<NeedType, "other" | "escort">, string[]> = {
   ],
 };
 
-export function offlinePlan(transcript: string, trip: Trip, lang: LangCode): Plan {
+/** Latin keywords must start a word ("eat" must not match "seat"); Indian scripts match anywhere. */
+function hasKeyword(text: string, w: string): boolean {
+  const word = w.toLowerCase();
+  // Keywords are plain letters and spaces, so they are safe to put in a RegExp.
+  if (/^[a-z ]+$/.test(word.trim())) return new RegExp(`(^|[^a-z])${word.trim()}`).test(text);
+  return text.includes(word);
+}
+
+export function offlinePlan(transcript: string, trip: Trip, lang: LangCode): Plan | NoPlan {
   const text = transcript.toLowerCase();
-  const found = (Object.keys(KEYWORDS) as (keyof typeof KEYWORDS)[]).filter((k) =>
-    KEYWORDS[k].some((w) => text.includes(w.toLowerCase())),
-  );
-  const needs: NeedType[] = found.length ? found : ["wheelchair"];
+  const found = (Object.keys(KEYWORDS) as (keyof typeof KEYWORDS)[]).filter((k) => KEYWORDS[k].some((w) => hasKeyword(text, w)));
+  // Nothing we recognise: say so instead of guessing.
+  if (!found.length) return { none: true, notPossible: [] };
+  const needs: NeedType[] = found;
   const last = trip.stops.length - 1;
   const mid = Math.floor(last / 2);
   const mk = (type: NeedType): Need => ({ type, title: needLabel(lang, type), instruction: t(lang, "genericInstruction") });
