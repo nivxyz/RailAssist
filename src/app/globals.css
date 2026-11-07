@@ -1,26 +1,165 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Rail maroon: brand, headings, primary buttons */
+  --color-brand-950: #2a0a0f;
+  --color-brand-900: #431219;
+  --color-brand-800: #6b1623; /* matches the logo */
+  --color-brand-700: #8c2c38;
+  /* Warm sand tints (backgrounds, tracks, chips) */
+  --color-brand-100: #ede4d8;
+  --color-brand-50: #f5efe6;
+  /* Turmeric amber: voice, send, delays, need icons */
+  --color-accent-600: #9c4a0b;
+  --color-accent-500: #c0640f;
+  --color-accent-100: #f7e2c2;
+  --color-accent-50: #fbf2e3;
+  /* Confirmed */
+  --color-ok-700: #1f5f3d;
+  --color-ok-600: #2a7a50;
+  --color-ok-100: #ddebdd;
+  --color-ink: #201b17;
+  --color-muted: #645b51;
+  --color-line: #e3d9ca;
+  --color-paper: #f7f2ea;
+  --font-sans: var(--font-figtree), "Nirmala UI", "Noto Sans", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Animations (kept subtle so they look good on video) ---------- */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-110%);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(4%);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(192, 100, 15, 0);
+  }
+  15%,
+  60% {
+    background-color: #fbf2e3;
+    box-shadow: 0 0 0 4px rgba(192, 100, 15, 0.3);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.anim-slide-down {
+  animation: slide-down 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.anim-slide-in {
+  animation: slide-in-right 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.anim-flash {
+  animation: flash 2.4s ease-in-out 2;
+}
+.anim-pop {
+  animation: pop 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.anim-blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-slide-down,
+  .anim-slide-in,
+  .anim-flash,
+  .anim-pop,
+  .anim-blink,
+  .pulse-ring::before {
+    animation: none !important;
+  }
+}
+
+/* Thin, quiet scrollbars inside the phone frame */
+.scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: #d6cab8 transparent;
 }
