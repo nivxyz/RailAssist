@@ -141,6 +141,9 @@ const en = {
   whereOnboard: "On the train",
   usefulLinks: "Useful official links",
   alwaysAvailable: "Help any time",
+  helpTopics: "I can help with",
+  askTopic: "I need help with: {topic}",
+  privacyTitle: "Private to you",
 };
 
 export type TKey = keyof typeof en;
@@ -261,6 +264,9 @@ const hi: Dict = {
   whereOnboard: "ट्रेन में",
   usefulLinks: "काम के सरकारी लिंक",
   alwaysAvailable: "कभी भी मदद",
+  helpTopics: "मैं इनमें मदद कर सकता हूँ",
+  askTopic: "मुझे इसमें मदद चाहिए: {topic}",
+  privacyTitle: "सिर्फ़ आपके लिए",
 };
 
 // TODO(native-speaker review): Tamil. Not confident, left in English:
