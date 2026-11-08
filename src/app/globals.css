@@ -1,27 +1,75 @@
 @import "tailwindcss";
 
-@theme inline {
+/* Colours live in variables so light and dark mode can swap them.
+   Dark mode: follows the system unless the switch sets data-theme on <html>. */
+:root {
+  color-scheme: light;
   /* Rail maroon: brand, headings, primary buttons */
-  --color-brand-950: #2a0a0f;
-  --color-brand-900: #431219;
-  --color-brand-800: #6b1623; /* matches the logo */
-  --color-brand-700: #8c2c38;
+  --ra-brand-950: #2a0a0f;
+  --ra-brand-900: #431219;
+  --ra-brand-800: #6b1623; /* matches the logo */
+  --ra-brand-700: #8c2c38;
   /* Warm sand tints (backgrounds, tracks, chips) */
-  --color-brand-100: #ede4d8;
-  --color-brand-50: #f5efe6;
-  /* Turmeric amber: voice, send, delays, need icons */
-  --color-accent-600: #9c4a0b;
-  --color-accent-500: #c0640f;
-  --color-accent-100: #f7e2c2;
-  --color-accent-50: #fbf2e3;
-  /* Confirmed */
-  --color-ok-700: #1f5f3d;
-  --color-ok-600: #2a7a50;
-  --color-ok-100: #ddebdd;
-  --color-ink: #201b17;
-  --color-muted: #645b51;
-  --color-line: #e3d9ca;
-  --color-paper: #f7f2ea;
+  --ra-brand-100: #ede4d8;
+  --ra-brand-50: #f5efe6;
+  /* Turmeric amber: voice, need icons */
+  --ra-accent-600: #9c4a0b;
+  --ra-accent-500: #c0640f;
+  --ra-accent-100: #f7e2c2;
+  --ra-accent-50: #fbf2e3;
+  --ra-ok-700: #1f5f3d;
+  --ra-ok-600: #2a7a50;
+  --ra-ok-100: #ddebdd;
+  --ra-ink: #201b17;
+  --ra-muted: #645b51;
+  --ra-line: #e3d9ca;
+  --ra-paper: #f7f2ea;
+  --ra-card: #ffffff;
+  --ra-scroll: #d6cab8;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ra-brand-950: #fbe9e5;
+  --ra-brand-900: #f1cfc6;
+  --ra-brand-800: #c95663;
+  --ra-brand-700: #e08a93;
+  --ra-brand-100: #3b2c2a;
+  --ra-brand-50: #2b1f1d;
+  --ra-accent-600: #f3a95a;
+  --ra-accent-500: #c0640f;
+  --ra-accent-100: #4d3219;
+  --ra-accent-50: #3a2716;
+  --ra-ok-700: #8fd3a9;
+  --ra-ok-600: #5fb784;
+  --ra-ok-100: #1d3326;
+  --ra-ink: #f4ede5;
+  --ra-muted: #b5a99c;
+  --ra-line: #3a302a;
+  --ra-paper: #15110e;
+  --ra-card: #211b17;
+  --ra-scroll: #4a3f37;
+}
+
+@theme inline {
+  --color-brand-950: var(--ra-brand-950);
+  --color-brand-900: var(--ra-brand-900);
+  --color-brand-800: var(--ra-brand-800);
+  --color-brand-700: var(--ra-brand-700);
+  --color-brand-100: var(--ra-brand-100);
+  --color-brand-50: var(--ra-brand-50);
+  --color-accent-600: var(--ra-accent-600);
+  --color-accent-500: var(--ra-accent-500);
+  --color-accent-100: var(--ra-accent-100);
+  --color-accent-50: var(--ra-accent-50);
+  --color-ok-700: var(--ra-ok-700);
+  --color-ok-600: var(--ra-ok-600);
+  --color-ok-100: var(--ra-ok-100);
+  --color-ink: var(--ra-ink);
+  --color-muted: var(--ra-muted);
+  --color-line: var(--ra-line);
+  --color-paper: var(--ra-paper);
+  --color-card: var(--ra-card);
   --font-sans: var(--font-figtree), "Nirmala UI", "Noto Sans", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
@@ -83,7 +131,7 @@ body {
   }
   15%,
   60% {
-    background-color: #fbf2e3;
+    background-color: var(--ra-accent-50);
     box-shadow: 0 0 0 4px rgba(192, 100, 15, 0.3);
   }
 }
@@ -161,5 +209,5 @@ body {
 /* Thin, quiet scrollbars inside the phone frame */
 .scroll-quiet {
   scrollbar-width: thin;
-  scrollbar-color: #d6cab8 transparent;
+  scrollbar-color: var(--ra-scroll) transparent;
 }

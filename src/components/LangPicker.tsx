@@ -14,7 +14,7 @@ export function LangPicker({ lang, onChange, label }: { lang: LangCode; onChange
       <select
         value={lang}
         onChange={(e) => onChange(e.target.value as LangCode)}
-        className="appearance-none rounded-full border border-line bg-white py-2 pl-8 pr-8 text-base font-semibold text-brand-900 shadow-sm outline-none focus-visible:ring-4 focus-visible:ring-accent-500/30"
+        className="appearance-none rounded-full border border-line bg-card py-2 pl-8 pr-8 text-base font-semibold text-brand-900 shadow-sm outline-none focus-visible:ring-4 focus-visible:ring-accent-500/30"
       >
         {LANGUAGES.map((l) => (
           <option key={l.code} value={l.code}>

@@ -11,6 +11,7 @@ import { LangPicker } from "../LangPicker";
 import { Logo } from "../Logo";
 import { InstallPrompt } from "./InstallPrompt";
 import { useLang } from "../useLang";
+import { ThemeToggle } from "../ThemeToggle";
 import { GetIt } from "./GetIt";
 import { useRecorder } from "./useRecorder";
 
@@ -118,11 +119,11 @@ export function ChatApp() {
   const working = busy || mic.state === "transcribing";
 
   return (
-    <div className="flex h-dvh w-full flex-col bg-paper">
-      <header className="shrink-0 border-b border-line bg-white">
+    <div className="relative flex h-dvh w-full flex-col bg-paper">
+      <header className="shrink-0 border-b border-line bg-card">
         <div className="flex items-center justify-between gap-2 px-4 py-3 lg:px-8 lg:py-4">
           <Logo size={38} sub={t(lang, "tagline")} />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 lg:gap-3">
             {messages.length > 0 && (
               <button
                 type="button"
@@ -132,6 +133,7 @@ export function ChatApp() {
                 {t(lang, "newChat")}
               </button>
             )}
+            <ThemeToggle toDark={t(lang, "darkMode")} toLight={t(lang, "lightMode")} />
             <LangPicker lang={lang} onChange={setLang} label={t(lang, "language")} />
           </div>
         </div>
@@ -156,7 +158,7 @@ export function ChatApp() {
                       key={k}
                       type="button"
                       onClick={() => void send(t(lang, k))}
-                      className="rounded-full border-2 border-brand-800/20 bg-white px-4 py-2.5 text-[16px] font-semibold text-brand-800 transition hover:border-brand-800 active:scale-[0.97]"
+                      className="rounded-full border-2 border-brand-800/20 bg-card px-4 py-2.5 text-[16px] font-semibold text-brand-800 transition hover:border-brand-800 active:scale-[0.97]"
                     >
                       {t(lang, k)}
                     </button>
@@ -191,7 +193,7 @@ export function ChatApp() {
           </main>
 
           {/* Input bar */}
-          <div className="shrink-0 border-t border-line bg-white px-3 pb-3 pt-2.5 lg:px-8 lg:pb-5 lg:pt-4">
+          <div className="shrink-0 border-t border-line bg-card px-3 pb-3 pt-2.5 lg:px-8 lg:pb-5 lg:pt-4">
             <div className="mx-auto w-full max-w-3xl">
               {notice && (
                 <div role="alert" className="anim-fade-up mb-2 rounded-xl bg-accent-50 px-3 py-2 text-[15px] font-semibold text-accent-600">
@@ -271,7 +273,7 @@ function Sidebar({ lang, disabled, onAsk }: { lang: LangCode; disabled: boolean;
   const helpline = helplineContacts();
   return (
     <aside
-      className="scroll-quiet hidden w-[360px] shrink-0 flex-col gap-6 overflow-y-auto border-r border-line bg-white px-6 py-6 lg:flex xl:w-[400px]"
+      className="scroll-quiet hidden w-[360px] shrink-0 flex-col gap-6 overflow-y-auto border-r border-line bg-card px-6 py-6 lg:flex xl:w-[400px]"
       lang={lang}
     >
       <div>
@@ -319,7 +321,7 @@ function Sidebar({ lang, disabled, onAsk }: { lang: LangCode; disabled: boolean;
 function BotBubble({ children }: { children: React.ReactNode }) {
   return (
     <div className="anim-fade-up mt-3 flex justify-start first:mt-0">
-      <div className="max-w-[92%] rounded-2xl rounded-bl-md border border-line bg-white px-4 py-3">{children}</div>
+      <div className="max-w-[92%] rounded-2xl rounded-bl-md border border-line bg-card px-4 py-3">{children}</div>
     </div>
   );
 }
@@ -335,7 +337,7 @@ function BotMessage({ reply, lang }: { reply: BotReply; lang: LangCode }) {
       </BotBubble>
 
       {reply.notPossible.length > 0 && (
-        <div className="rounded-2xl border border-line bg-white px-4 py-3">
+        <div className="rounded-2xl border border-line bg-card px-4 py-3">
           <div className="text-[15px] font-bold text-brand-900">{t(lang, "notPossibleTitle")}</div>
           <ul className="mt-1 list-disc pl-5 text-[16px] text-muted">
             {reply.notPossible.map((x) => (
@@ -363,7 +365,7 @@ function NeedCard({ need, lang, delay }: { need: ChatNeed; lang: LangCode; delay
   const whereKey = WHERE_KEY[need.where];
   const links = serviceContacts(need.type);
   return (
-    <div className="anim-fade-up rounded-2xl border border-line bg-white px-4 py-3" style={{ animationDelay: `${delay}ms` }}>
+    <div className="anim-fade-up rounded-2xl border border-line bg-card px-4 py-3" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex gap-3">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent-50 text-accent-600">
           <NeedIcon type={need.type} className="h-6 w-6" />

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree, Geist_Mono } from "next/font/google";
 import { RegisterSW } from "@/components/RegisterSW";
+import { themeScript } from "@/components/ThemeToggle";
 import "./globals.css";
 
 // Figtree: friendly, very legible at large sizes (good for older readers).
@@ -29,7 +30,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${figtree.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en" className={`${figtree.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full">
         {children}
         <RegisterSW />

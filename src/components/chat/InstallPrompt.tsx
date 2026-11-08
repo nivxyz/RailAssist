@@ -48,7 +48,7 @@ export function InstallPrompt({ lang }: { lang: LangCode }) {
 
   return (
     <div className="absolute inset-0 z-[60] flex items-end bg-black/30" role="dialog" aria-modal="true" aria-labelledby="install-title">
-      <div className="anim-fade-up w-full rounded-t-3xl bg-white px-5 pb-6 pt-5 shadow-[0_-12px_40px_-12px_rgba(32,27,23,0.35)]">
+      <div className="anim-fade-up w-full rounded-t-3xl bg-card px-5 pb-6 pt-5 shadow-[0_-12px_40px_-12px_rgba(32,27,23,0.35)]">
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-brand-100" />
         <div className="flex items-center gap-3">
           <LogoMark size={56} />

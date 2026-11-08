@@ -26,7 +26,7 @@ export function GetIt({ contacts, lang }: { contacts: ContactOption[]; lang: Lan
             href={href}
             target={isPhone ? undefined : "_blank"}
             rel={isPhone ? undefined : "noopener noreferrer"}
-            className="flex items-center gap-3 rounded-xl border-2 border-brand-800 bg-white px-3 py-2.5 text-brand-800 transition hover:bg-brand-50 active:scale-[0.98]"
+            className="flex items-center gap-3 rounded-xl border-2 border-brand-800 bg-card px-3 py-2.5 text-brand-800 transition hover:bg-brand-50 active:scale-[0.98]"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-800 text-white">
               {isPhone ? <PhoneIcon className="h-5 w-5" /> : <LinkIcon className="h-5 w-5" />}

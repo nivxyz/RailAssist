@@ -144,6 +144,8 @@ const en = {
   helpTopics: "I can help with",
   askTopic: "I need help with: {topic}",
   privacyTitle: "Private to you",
+  darkMode: "Switch to dark mode",
+  lightMode: "Switch to light mode",
 };
 
 export type TKey = keyof typeof en;
@@ -267,6 +269,8 @@ const hi: Dict = {
   helpTopics: "मैं इनमें मदद कर सकता हूँ",
   askTopic: "मुझे इसमें मदद चाहिए: {topic}",
   privacyTitle: "सिर्फ़ आपके लिए",
+  darkMode: "डार्क मोड चालू करें",
+  lightMode: "लाइट मोड चालू करें",
 };
 
 // TODO(native-speaker review): Tamil. Not confident, left in English:
