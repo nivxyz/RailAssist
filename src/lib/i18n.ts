@@ -24,6 +24,7 @@ export const LANGUAGES: { code: LangCode; native: string; english: string }[] = 
   { code: "te", native: "తెలుగు", english: "Telugu" },
   { code: "bn", native: "বাংলা", english: "Bengali" },
   { code: "mr", native: "मराठी", english: "Marathi" },
+  { code: "ml", native: "മലയാളം", english: "Malayalam" },
 ];
 
 const en = {
@@ -656,7 +657,63 @@ const mr: Dict = {
   now: "आता",
 };
 
-const DICTS: Record<LangCode, Dict> = { en, hi, ta, kn, te, bn, mr };
+// TODO(native-speaker review): Malayalam (added 9 Nov 2026). Covers everything the
+// chat screen shows; old trip-planner keys fall back to English.
+const ml: Dict = {
+  tagline: "നിങ്ങളുടെ ട്രെയിൻ യാത്രാ സഹായി",
+  language: "ഭാഷ",
+  tapToSpeak: "സംസാരിക്കാൻ അമർത്തുക",
+  listening: "കേൾക്കുന്നു… നിർത്താൻ അമർത്തുക",
+  transcribing: "നിങ്ങളുടെ ശബ്ദം മനസ്സിലാക്കുന്നു…",
+  micError: "മൈക്രോഫോൺ പ്രവർത്തിച്ചില്ല. ദയവായി താഴെ എഴുതുക.",
+  transcribeError: "ക്ഷമിക്കണം, ശരിയായി കേട്ടില്ല. വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ താഴെ എഴുതുക.",
+  planError: "എന്തോ പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.",
+  offlinePlan: "ഈ ഫോണിൽ തന്നെ തയ്യാറാക്കിയ ലളിതമായ സഹായം (AI ഇപ്പോൾ ലഭ്യമല്ല).",
+  needWheelchair: "വീൽചെയർ",
+  needPorter: "പോർട്ടർ / സഹായക്",
+  needBatteryCar: "ബാറ്ററി കാർ",
+  needLowerBerth: "താഴത്തെ ബർത്ത്",
+  needMeal: "ഭക്ഷണം",
+  needMedical: "വൈദ്യ സഹായം",
+  needEscort: "കോച്ച് വരെ കൂടെ",
+  needOther: "മറ്റ് സഹായം",
+  emptyNeeds: "നിങ്ങൾക്ക് എന്ത് സഹായമാണ് വേണ്ടതെന്ന് പറയൂ.",
+  howToGet: "ഇന്ന് ഇത് എങ്ങനെ നേടാം",
+  callNumber: "{number} എന്ന നമ്പറിൽ വിളിക്കുക",
+  openLink: "തുറക്കുക",
+  askAt: "ഇവിടെ ചോദിക്കുക:",
+  enquiryCounter: "സ്റ്റേഷനിലെ എൻക്വയറി കൗണ്ടർ",
+  notUnderstood: "ക്ഷമിക്കണം, എനിക്ക് അത് മനസ്സിലായില്ല.",
+  canHelpWith: "വീൽചെയർ, ലഗേജിന് പോർട്ടർ, ബാറ്ററി കാർ, താഴത്തെ ബർത്ത്, ഭക്ഷണം, വൈദ്യ സഹായം, കോച്ച് വരെ കൂടെ വരാൻ ഒരാൾ എന്നിവയിൽ എനിക്ക് സഹായിക്കാം.",
+  notPossibleTitle: "ട്രെയിനിലോ സ്റ്റേഷനിലോ ലഭ്യമല്ല",
+  installTitle: "RailAssist ആപ്പ് ഡൗൺലോഡ് ചെയ്യണോ?",
+  installBody: "ഹോം സ്ക്രീനിൽ വെക്കൂ. ഇത് സാധാരണ ആപ്പ് പോലെ തുറക്കും.",
+  installYes: "അതെ, ഡൗൺലോഡ് ചെയ്യൂ",
+  installNo: "ഇപ്പോൾ വേണ്ട",
+  welcome: "നമസ്കാരം! ഞാൻ RailAssist ആണ്. നിങ്ങളുടെ ട്രെയിൻ യാത്രയെക്കുറിച്ചും വേണ്ട സഹായത്തെക്കുറിച്ചും പറയൂ: വീൽചെയർ, ലഗേജിന് സഹായം, അല്ലെങ്കിൽ ട്രെയിനിൽ ഭക്ഷണം.",
+  privacyNote: "ഈ ചാറ്റ് നിങ്ങളുടെ ഉപകരണത്തിൽ മാത്രം. മറ്റാരും ഇത് കാണില്ല.",
+  suggestWheelchair: "എനിക്ക് സ്റ്റേഷനിൽ വീൽചെയർ വേണം",
+  suggestBags: "ഭാരമുള്ള ലഗേജിന് സഹായം വേണം",
+  suggestFood: "ട്രെയിനിൽ ഭക്ഷണം എങ്ങനെ ഓർഡർ ചെയ്യാം?",
+  suggestMedical: "ട്രെയിനിൽ വൈദ്യ സഹായം വേണം",
+  typeMessage: "നിങ്ങളുടെ സന്ദേശം എഴുതുക",
+  send: "അയയ്ക്കുക",
+  newChat: "പുതിയ ചാറ്റ് തുടങ്ങുക",
+  thinking: "ആലോചിക്കുന്നു…",
+  offlineReply: "സഹായം ഇതാ. താഴെയുള്ള ബട്ടണുകൾ ഉപയോഗിച്ച് ഇത് ഏർപ്പാടാക്കുക.",
+  whereBoarding: "നിങ്ങൾ കയറുന്ന സ്റ്റേഷനിൽ",
+  whereArrival: "നിങ്ങൾ ഇറങ്ങുന്ന സ്റ്റേഷനിൽ",
+  whereOnboard: "ട്രെയിനിൽ",
+  usefulLinks: "ഉപകാരപ്രദമായ ഔദ്യോഗിക ലിങ്കുകൾ",
+  alwaysAvailable: "എപ്പോഴും സഹായം",
+  helpTopics: "ഇവയിൽ എനിക്ക് സഹായിക്കാം",
+  askTopic: "എനിക്ക് ഇതിൽ സഹായം വേണം: {topic}",
+  privacyTitle: "നിങ്ങൾക്ക് മാത്രം",
+  darkMode: "ഡാർക്ക് മോഡ് ഓണാക്കുക",
+  lightMode: "ലൈറ്റ് മോഡ് ഓണാക്കുക",
+};
+
+const DICTS: Record<LangCode, Dict> = { en, hi, ta, kn, te, bn, mr, ml };
 
 export function t(lang: LangCode, key: TKey, params?: Record<string, string | number>): string {
   let s = DICTS[lang]?.[key] ?? en[key];

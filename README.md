@@ -7,7 +7,7 @@ RailAssist is a chatbot that helps elderly and disabled Indian Railways passenge
 - **One chat, just for you.** There is no admin, no station desk and nobody else reading it. The chat is saved only on your own device.
 - **No booking.** RailAssist cannot book anything. It points you to the official way to do it (IRCTC, eCatering, Rail Madad, RailOne and so on). With an IRCTC partnership, it could book these for you in the future.
 - **Realistic.** It only helps with real railway services: wheelchair, porter (Sahayak), battery car, lower berth quota, food on the train, medical help, and help to reach your coach. Anything else (a teacher on board, a personal nurse, a taxi) is listed as **Not available on trains or at stations**. Unrelated requests (like "a Boeing aeroplane") get **"Sorry, I didn't understand that."**
-- **7 languages:** English, Hindi, Tamil, Kannada, Telugu, Bengali, Marathi.
+- **8 languages:** English, Hindi, Tamil, Kannada, Telugu, Bengali, Marathi, Malayalam.
 
 Live: https://railassist-ideathon.vercel.app (same chatbot on phone and PC).
 

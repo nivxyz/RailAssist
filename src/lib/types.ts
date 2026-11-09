@@ -1,4 +1,4 @@
-export type LangCode = "en" | "hi" | "ta" | "kn" | "te" | "bn" | "mr";
+export type LangCode = "en" | "hi" | "ta" | "kn" | "te" | "bn" | "mr" | "ml";
 
 export const NEED_TYPES = [
   "wheelchair",
